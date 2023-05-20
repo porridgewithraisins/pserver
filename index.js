@@ -97,7 +97,7 @@ const leaderboard = cacher(60_1000)(() => leaderboardStmt.all());
 app.get("/leaderboard", (_, res) => res.json(leaderboard()));
 
 if (process.env.NODE_ENV !== "production")
-    app.listen(3000, () => console.log("Listening on port 3000"));
+    app.listen(process.env.PORT, () => console.log("Listening on port 3000"));
 else {
     if (!process.env.KEY || !process.env.CERT) {
         throw new Error("Missing environment variables KEY and/or CERT");
