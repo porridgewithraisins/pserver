@@ -1,3 +1,4 @@
+const https = require("https");
 const Express = require("express");
 const { Password, cacher, useJwt } = require("./utils");
 const Database = require("better-sqlite3");
@@ -93,4 +94,20 @@ const leaderboardStmt = db.prepare(
 const leaderboard = cacher(60)(() => leaderboardStmt.all());
 app.get("/leaderboard", (_, res) => res.json(leaderboard()));
 
-console.log(`Listening at ${app.listen(3000).address()}`);
+if (process.env.NODE_ENV !== "production")
+    console.log(`Listening at ${app.listen(3000).address()}`);
+else {
+    if (!process.env.KEY || !process.env.CERT) {
+        throw new Error("Missing environment variables KEY and/or CERT");
+    }
+
+    const server = https.createServer(
+        {
+            key: fs.readFileSync(process.env.KEY),
+            cert: fs.readFileSync(process.env.CERT),
+        },
+        app
+    );
+
+    console.log(`Listening at ${server.listen(443).address()}`);
+}
