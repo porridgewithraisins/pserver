@@ -37,7 +37,7 @@ app.post("/register", async (req, res) => {
             return res.status(400).json({ error: "Username already taken" });
 
         res.status(500).json({ error: "Internal server error" });
-        console.err(err);
+        console.error(err);
     }
 });
 
@@ -93,7 +93,7 @@ app.post("/answer", authorize, (req, res) => {
 const leaderboardStmt = db.prepare(
     "SELECT username, avatar, level FROM users ORDER BY level DESC, reachedAt ASC"
 );
-const leaderboard = cacher(60)(() => leaderboardStmt.all());
+const leaderboard = cacher(60_1000)(() => leaderboardStmt.all());
 app.get("/leaderboard", (_, res) => res.json(leaderboard()));
 
 if (process.env.NODE_ENV !== "production")
