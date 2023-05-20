@@ -95,7 +95,7 @@ const leaderboard = cacher(60)(() => leaderboardStmt.all());
 app.get("/leaderboard", (_, res) => res.json(leaderboard()));
 
 if (process.env.NODE_ENV !== "production")
-    console.log(`Listening at ${app.listen(3000).address()}`);
+    app.listen(3000, () => console.log("Listening on port 3000"));
 else {
     if (!process.env.KEY || !process.env.CERT) {
         throw new Error("Missing environment variables KEY and/or CERT");
@@ -109,5 +109,5 @@ else {
         app
     );
 
-    console.log(`Listening at ${server.listen(443).address()}`);
+    server.listen(443, () => console.log("Listening on port 443"));
 }
