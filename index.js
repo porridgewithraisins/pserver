@@ -1,5 +1,6 @@
 const https = require("https");
 const Express = require("express");
+const cors = require("cors");
 const { Password, cacher, useJwt } = require("./utils");
 const Database = require("better-sqlite3");
 const fs = require("node:fs");
@@ -7,6 +8,7 @@ const fs = require("node:fs");
 if (!process.env.JWT_SECRET) throw new Error("Missing Environment Variable JWT_SECRET");
 
 const app = Express();
+app.use(cors(process.env.FRONTEND));
 
 const db = new Database("paradox.sqlite3", { verbose: console.log }).exec(
     fs.readFileSync("migration.sql", { encoding: "utf-8" })
